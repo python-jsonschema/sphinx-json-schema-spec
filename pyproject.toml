@@ -36,8 +36,9 @@ classifiers = [
 dynamic = ["version"]
 
 dependencies = [
-    "lxml",
-    "sphinx>=5.1.1",
+  "lxml",
+  "sphinx>=5.1.1",
+  "importlib_metadata;python_version<'3.8'",
 ]
 
 [project.urls]
