@@ -9,8 +9,6 @@ from docutils import nodes
 from lxml import html
 import certifi
 
-__version__ = "2.0.0"
-
 BASE_URL = "https://json-schema.org/draft/2020-12/"
 VOCABULARIES = {
     "core": urljoin(BASE_URL, "json-schema-core.html"),
@@ -45,7 +43,7 @@ def setup(app):
     }
     app.add_role("kw", docutils_does_not_allow_using_classes(documents))
 
-    return dict(version=__version__, parallel_read_safe=True)
+    return dict(parallel_read_safe=True)
 
 
 def fetch_or_load(vocabulary_path, url):
@@ -63,12 +61,8 @@ def fetch_or_load(vocabulary_path, url):
             the URL of the vocabulary document
     """
 
-    headers = {
-        "User-Agent": "python-jsonschema v{} - documentation build v{}".format(
-            metadata.version("jsonschema"),
-            __version__,
-        ),
-    }
+    version = metadata.version("sphinx-json-schema-spec")
+    headers = {"User-Agent": f"sphinx-json-schema-spec v{version}"}
 
     with suppress(FileNotFoundError):
         modified = datetime.utcfromtimestamp(vocabulary_path.stat().st_mtime)
