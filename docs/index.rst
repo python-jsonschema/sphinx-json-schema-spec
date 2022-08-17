@@ -7,7 +7,7 @@ Usage
 
 The extension currently provides a single Sphinx `role`:
 
-.. role:: kw
+.. rst:role:: kw
 
     Link to the current JSON Schema specification's definition of the keyword
     provided.
