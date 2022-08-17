@@ -1,9 +1,13 @@
 from contextlib import suppress
 from datetime import datetime
-from importlib import metadata
 from pathlib import Path
 from urllib.parse import urljoin
 import urllib.request
+
+try:
+    from importlib import metadata
+except ImportError:
+    import importlib_metadata as metadata
 
 from docutils import nodes
 from lxml import html
