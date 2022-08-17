@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[project]
+name = "sphinx_json_schema_spec"
+description = ""
+readme = "README.rst"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+keywords = ["json schema", "jsonschema", "data validation", "sphinx", "json"]
+authors = [
+  {email = "Julian+sphinx-json-schema-spec@GrayVines.com"},
+  {name = "Julian Berman"},
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Programming Language :: Python",
+  "Framework :: Sphinx :: Extension",
+  "Topic :: Documentation :: Sphinx",
+]
+dynamic = ["version"]
+
+dependencies = [
+    "lxml",
+    "sphinx>=5.1.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/python-jsonschema/sphinx-json-schema-spec"
+Issues = "https://github.com/python-jsonschema/sphinx-json-schema-spec/issues/"
+Funding = "https://github.com/sponsors/Julian"
+Source = "https://github.com/python-jsonschema/sphinx-json-schema-spec"
+
+[tool.isort]
+from_first = true
+include_trailing_comma = true
+multi_line_output = 3
