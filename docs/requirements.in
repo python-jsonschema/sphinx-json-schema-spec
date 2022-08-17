@@ -1,0 +1,4 @@
+file:.#egg=sphinx_json_schema_spec
+furo
+sphinx>=5.1
+sphinxcontrib-spelling>5

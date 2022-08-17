@@ -55,6 +55,16 @@ jobs:
           - name: "3.10"
             toxenv: py310-tests
           - name: "3.10"
+            toxenv: docs-dirhtml
+          - name: "3.10"
+            toxenv: docs-doctest
+          - name: "3.10"
+            toxenv: docs-linkcheck
+          - name: "3.10"
+            toxenv: docs-spelling
+          - name: "3.10"
+            toxenv: docs-style
+          - name: "3.10"
             toxenv: readme
           - name: "3.10"
             toxenv: secrets
