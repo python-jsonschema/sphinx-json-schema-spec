@@ -42,34 +42,40 @@ def setup(app):
     CACHE.mkdir(exist_ok=True)
 
     documents = {
-        url: fetch_or_load(vocabulary_path=CACHE / f"{name}.html", url=url)
+        url: fetch_or_load(cache_path=CACHE / f"{name}.html", url=url)
         for name, url in VOCABULARIES.items()
     }
     app.add_role("kw", docutils_does_not_allow_using_classes(documents))
 
+    glossary = fetch_or_load(
+        cache_path=CACHE / "glossary.html",
+        url="https://json-schema.org/learn/glossary.html",
+    )
+    app.connect("missing-reference", missing_reference(glossary))
+
     return dict(parallel_read_safe=True)
 
 
-def fetch_or_load(vocabulary_path, url):
+def fetch_or_load(cache_path, url):
     """
-    Fetch a new specification or use the cache if it's current.
+    Fetch a new page or specification, or use the cache if it's current.
 
     Arguments:
 
-        vocabulary_path:
+        cache_path:
 
-            the local path to a cached vocabulary document
+            the local path to a (possibly not yet existing) cache for the file
 
         url:
 
-            the URL of the vocabulary document
+            the URL of the document
     """
 
     version = metadata.version("sphinx-json-schema-spec")
     headers = {"User-Agent": f"sphinx-json-schema-spec v{version}"}
 
     with suppress(FileNotFoundError):
-        modified = datetime.utcfromtimestamp(vocabulary_path.stat().st_mtime)
+        modified = datetime.utcfromtimestamp(cache_path.stat().st_mtime)
         date = modified.strftime("%a, %d %b %Y %I:%M:%S UTC")
         headers["If-Modified-Since"] = date
 
@@ -77,12 +83,12 @@ def fetch_or_load(vocabulary_path, url):
     response = urllib.request.urlopen(request, cafile=certifi.where())
 
     if response.code == 200:
-        with vocabulary_path.open("w+b") as spec:
-            spec.writelines(response)
-            spec.seek(0)
-            return html.parse(spec).getroot()
+        with cache_path.open("w+b") as out:
+            out.writelines(response)
+            out.seek(0)
+            return html.parse(out).getroot()
 
-    return html.parse(vocabulary_path.read_bytes()).getroot()
+    return html.parse(cache_path.read_bytes()).getroot()
 
 
 def docutils_does_not_allow_using_classes(vocabularies):
@@ -149,3 +155,30 @@ def docutils_does_not_allow_using_classes(vocabularies):
         return [reference], []
 
     return keyword
+
+
+def missing_reference(glossary):
+
+    terms = {
+        link.lstrip("#")
+        for _, _, link, _ in glossary.iterlinks()
+        if link.startswith("#")
+    }
+
+    def _missing_reference(app, env, node, contnod):
+        """
+        Resolve a reference to a JSON Schema Glossary term.
+        """
+
+        if node["reftype"] != "term":
+            return
+
+        target = node["reftarget"]
+        if target not in terms:
+            return
+
+        uri = f"https://json-schema.org/learn/glossary.html#{target}"
+
+        text = contnod.astext() if node["refexplicit"] else target
+        return nodes.reference(text, text, internal=False, refuri=uri)
+    return _missing_reference
