@@ -2,6 +2,7 @@ from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin
+import ssl
 import urllib.request
 
 try:
@@ -11,7 +12,6 @@ except ImportError:
 
 from docutils import nodes
 from lxml import html
-import certifi
 
 BASE_URL = "https://json-schema.org/draft/2020-12/"
 VOCABULARIES = {
@@ -80,7 +80,8 @@ def fetch_or_load(cache_path, url):
         headers["If-Modified-Since"] = date
 
     request = urllib.request.Request(url, headers=headers)
-    response = urllib.request.urlopen(request, cafile=certifi.where())
+    context = ssl.create_default_context()
+    response = urllib.request.urlopen(request, context=context)
 
     if response.code == 200:
         with cache_path.open("w+b") as out:
