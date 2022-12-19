@@ -21,7 +21,7 @@ def session(default=True, **kwargs):
 
 @session(python=["3.7", "3.8", "3.9", "3.10", "3.11", "pypy3"])
 def tests(session):
-    session.install("-r", str(ROOT / "test-requirements.txt"))
+    session.install("pytest", str(ROOT))
     session.run("pytest", "--verbosity=3")
 
 
