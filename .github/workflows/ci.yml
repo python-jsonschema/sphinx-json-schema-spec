@@ -6,8 +6,8 @@ on:
   release:
     types: [published]
   schedule:
-    # Daily at 3:21
-    - cron: "21 3 * * *"
+    # Daily at 3:11
+    - cron: "11 3 * * *"
 
 jobs:
   pre-commit:
@@ -25,78 +25,25 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
-        python-version:
-          - name: pypy-3.9
-            toxenv: pypy3-build
-          - name: pypy-3.9
-            toxenv: pypy3-safety
-          - name: pypy-3.9
-            toxenv: pypy3-tests
-          - name: 3.7
-            toxenv: py37-build
-          - name: 3.7
-            toxenv: py37-safety
-          - name: 3.7
-            toxenv: py37-tests
-          - name: 3.8
-            toxenv: py38-build
-          - name: 3.8
-            toxenv: py38-safety
-          - name: 3.8
-            toxenv: py38-tests
-          - name: 3.9
-            toxenv: py39-build
-          - name: 3.9
-            toxenv: py39-safety
-          - name: 3.9
-            toxenv: py39-tests
-          - name: "3.10"
-            toxenv: py310-build
-          - name: "3.10"
-            toxenv: py310-safety
-          - name: "3.10"
-            toxenv: py310-tests
-          - name: "3.11"
-            toxenv: py311-build
-          - name: "3.11"
-            toxenv: py311-safety
-          - name: "3.11"
-            toxenv: py311-tests
-          - name: "3.11"
-            toxenv: docs-dirhtml
-          - name: "3.11"
-            toxenv: docs-doctest
-          - name: "3.11"
-            toxenv: docs-linkcheck
-          - name: "3.11"
-            toxenv: docs-spelling
-          - name: "3.11"
-            toxenv: docs-style
-          - name: "3.11"
-            toxenv: readme
-          - name: "3.11"
-            toxenv: secrets
-          - name: "3.11"
-            toxenv: style
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version.name }}
       - name: Install dependencies
         run: >
           sudo apt-get update &&
           sudo apt-get install -y libenchant-2-dev libxml2-dev libxslt-dev
-        if: runner.os == 'Linux' && startsWith(matrix.python-version.toxenv, 'docs-')
+        if: runner.os == 'Linux'
       - name: Install dependencies
         run: brew install enchant
-        if: runner.os == 'macOS' && startsWith(matrix.python-version.toxenv, 'docs-')
-      - name: Install tox
-        run: python -m pip install tox
-      - name: Run tox
-        run: python -m tox -e "${{ matrix.python-version.toxenv }}"
+        if: runner.os == 'macOS'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Set up nox
+        uses: wntrblm/nox@2022.11.21
+      - name: Run nox
+        run: nox
 
   packaging:
     needs: ci
@@ -112,23 +59,23 @@ jobs:
         run: python -m pip install build
       - name: Create packages
         run: python -m build .
+      - name: Set up nox
+        uses: wntrblm/nox@2022.11.21
       - uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
-      - name: Publish package
+      - name: Publish to PyPI
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.pypi_password }}
-      - name: Create Release Notes
+      - name: Create a Release
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
-        uses: actions/github-script@v6
+        uses: softprops/action-gh-release@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await github.request(`POST /repos/${{ github.repository }}/releases`, {
-              tag_name: "${{ github.ref }}",
-              generate_release_notes: true
-            });
+          files: |
+            shiv/bowtie
+            dist/*
+          generate_release_notes: true

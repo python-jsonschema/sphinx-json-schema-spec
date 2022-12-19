@@ -8,7 +8,7 @@ import urllib.request
 try:
     from importlib import metadata
 except ImportError:
-    import importlib_metadata as metadata
+    import importlib_metadata as metadata  # type: ignore
 
 from docutils import nodes
 from lxml import html
