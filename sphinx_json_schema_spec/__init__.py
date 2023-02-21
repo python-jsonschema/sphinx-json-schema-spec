@@ -19,6 +19,7 @@ VOCABULARIES = {
     "validation": urljoin(BASE_URL, "json-schema-validation.html"),
 }
 HARDCODED = {
+    "$dynamicRef": "https://json-schema.org/draft/2020-12/json-schema-core.html#dynamic-ref",                        # noqa: E501
     "$ref": "https://json-schema.org/draft/2020-12/json-schema-core.html#ref",
     "$schema": "https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-schema-keyword",                # noqa: E501
     "format": "https://json-schema.org/draft/2020-12/json-schema-validation.html#name-implementation-requirements",  # noqa: E501
