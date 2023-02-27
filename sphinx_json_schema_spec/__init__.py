@@ -146,7 +146,7 @@ def docutils_does_not_allow_using_classes(vocabularies):
             if header is None:
                 header = spec.get_element_by_id(
                     f"name-the-{lower}-keyword",
-                    None
+                    None,
                 )
 
             if header is not None:
