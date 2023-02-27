@@ -21,7 +21,6 @@ VOCABULARIES = {
 HARDCODED = {
     "$dynamicRef": "https://json-schema.org/draft/2020-12/json-schema-core.html#dynamic-ref",                        # noqa: E501
     "$ref": "https://json-schema.org/draft/2020-12/json-schema-core.html#ref",
-    "$schema": "https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-schema-keyword",                # noqa: E501
     "format": "https://json-schema.org/draft/2020-12/json-schema-validation.html#name-implementation-requirements",  # noqa: E501
 }
 
@@ -142,7 +141,13 @@ def docutils_does_not_allow_using_classes(vocabularies):
 
         # find the header in the validation spec containing matching text
         for vocabulary_url, spec in vocabularies.items():
-            header = spec.get_element_by_id(f"name-{text.lower()}", None)
+            lower = text.lstrip("$").lower()
+            header = spec.get_element_by_id(f"name-{lower}", None)
+            if header is None:
+                header = spec.get_element_by_id(
+                    f"name-the-{lower}-keyword",
+                    None
+                )
 
             if header is not None:
                 uri = urljoin(vocabulary_url, header.find("a").attrib["href"])
