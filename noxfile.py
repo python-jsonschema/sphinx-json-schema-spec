@@ -3,6 +3,7 @@ from pathlib import Path
 import nox
 
 ROOT = Path(__file__).parent
+PYPROJECT = ROOT / "pyproject.toml"
 DOCS = ROOT / "docs"
 PACKAGE = ROOT / "sphinx_json_schema_spec"
 
@@ -19,44 +20,43 @@ def session(default=True, **kwargs):
     return _session
 
 
-@session(python=["3.7", "3.8", "3.9", "3.10", "3.11", "pypy3"])
+@session(python=["3.8", "3.9", "3.10", "3.11", "pypy3"])
 def tests(session):
-    session.install("pytest", str(ROOT))
-    session.run("pytest", "--verbosity=3")
+    session.install("pytest", ROOT)
+    session.run("pytest", *session.posargs, PACKAGE)
+
+
+@session()
+def audit(session):
+    session.install("pip-audit", ROOT)
+    session.run("python", "-m", "pip_audit")
 
 
 @session(tags=["build"])
 def build(session):
     session.install("build")
     tmpdir = session.create_tmp()
-    session.run("python", "-m", "build", str(ROOT), "--outdir", tmpdir)
+    session.run("python", "-m", "build", ROOT, "--outdir", tmpdir)
 
 
 @session(tags=["style"])
 def readme(session):
     session.install("build", "twine")
     tmpdir = session.create_tmp()
-    session.run("python", "-m", "build", str(ROOT), "--outdir", tmpdir)
+    session.run("python", "-m", "build", ROOT, "--outdir", tmpdir)
     session.run("python", "-m", "twine", "check", tmpdir + "/*")
 
 
 @session(tags=["style"])
 def style(session):
-    session.install(
-        "flake8",
-        "flake8-broken-line",
-        "flake8-bugbear",
-        "flake8-commas",
-        "flake8-quotes",
-        "flake8-tidy-imports",
-    )
-    session.run("python", "-m", "flake8", str(PACKAGE), __file__)
+    session.install("ruff")
+    session.run("ruff", "check", ROOT)
 
 
 @session()
 def typing(session):
-    session.install("mypy", "types-docutils", "types-lxml", str(ROOT))
-    session.run("python", "-m", "mypy", str(PACKAGE))
+    session.install("mypy", "types-docutils", "types-lxml", ROOT)
+    session.run("python", "-m", "mypy", PACKAGE)
 
 
 @session(tags=["docs"])
@@ -74,7 +74,7 @@ def typing(session):
     ],
 )
 def docs(session, builder):
-    session.install("-r", str(DOCS / "requirements.txt"))
+    session.install("-r", DOCS / "requirements.txt")
     tmpdir = Path(session.create_tmp())
     argv = ["-n", "-T", "-W"]
     if builder != "spelling":
@@ -85,8 +85,8 @@ def docs(session, builder):
         "sphinx",
         "-b",
         builder,
-        str(DOCS),
-        str(tmpdir / builder),
+        DOCS,
+        tmpdir / builder,
         *argv,
     )
 
@@ -98,4 +98,4 @@ def docs_style(session):
         "pygments",
         "pygments-github-lexers",
     )
-    session.run("python", "-m", "doc8", "--max-line-length", "1000", str(DOCS))
+    session.run("python", "-m", "doc8", "--config", PYPROJECT, DOCS)

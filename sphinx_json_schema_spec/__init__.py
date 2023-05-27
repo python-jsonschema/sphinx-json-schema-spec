@@ -1,3 +1,6 @@
+"""
+Sphinx support for interlinking to the JSON Schema specifications.
+"""
 from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
@@ -35,7 +38,6 @@ def setup(app):
 
             the Sphinx application context
     """
-
     app.add_config_value("cache_path", "_cache", "")
 
     CACHE = Path(app.config.cache_path)
@@ -70,7 +72,6 @@ def fetch_or_load(cache_path, url):
 
             the URL of the document
     """
-
     version = metadata.version("sphinx-json-schema-spec")
     headers = {"User-Agent": f"sphinx-json-schema-spec v{version}"}
 
@@ -111,7 +112,7 @@ def docutils_does_not_allow_using_classes(vocabularies):
 
                 the name of the role in the document
 
-            raw_source (str):
+            raw_text (str):
 
                 the raw text (role with argument)
 
@@ -134,7 +135,6 @@ def docutils_does_not_allow_using_classes(vocabularies):
                 a 2-tuple of nodes to insert into the document and an
                 iterable of system messages, both possibly empty
         """
-
         hardcoded = HARDCODED.get(text)
         if hardcoded is not None:
             return [nodes.reference(raw_text, text, refuri=hardcoded)], []
@@ -153,9 +153,7 @@ def docutils_does_not_allow_using_classes(vocabularies):
                 uri = urljoin(vocabulary_url, header.find("a").attrib["href"])
                 break
         else:
-            inliner.reporter.warning(
-                "Didn't find a target for {0}".format(text),
-            )
+            inliner.reporter.warning(f"Didn't find a target for {text}")
             uri = BASE_URL
 
         reference = nodes.reference(raw_text, text, refuri=uri)
@@ -165,7 +163,9 @@ def docutils_does_not_allow_using_classes(vocabularies):
 
 
 def missing_reference(glossary):
-
+    """
+    Get callbacked for Sphinx's missing reference hook.
+    """
     terms = {
         link.lstrip("#")
         for _, _, link, _ in glossary.iterlinks()
@@ -176,7 +176,6 @@ def missing_reference(glossary):
         """
         Resolve a reference to a JSON Schema Glossary term.
         """
-
         if node["reftype"] != "term":
             return
 
