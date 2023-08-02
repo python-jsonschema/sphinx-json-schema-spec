@@ -74,6 +74,7 @@ def docs(session, builder):
         argv = ["-n", "-T", "-W"]
         if builder != "spelling":
             argv += ["-q"]
+        posargs = session.posargs or [tmpdir / builder]
         session.run(
             "python",
             "-m",
@@ -81,8 +82,8 @@ def docs(session, builder):
             "-b",
             builder,
             DOCS,
-            tmpdir / builder,
             *argv,
+            *posargs,
         )
 
 
@@ -94,3 +95,16 @@ def docs_style(session):
         "pygments-github-lexers",
     )
     session.run("python", "-m", "doc8", "--config", PYPROJECT, DOCS)
+
+
+@session(default=False)
+def requirements(session):
+    session.install("pip-tools")
+    for each in [DOCS / "requirements.in"]:
+        session.run(
+            "pip-compile",
+            "--resolver",
+            "backtracking",
+            "-U",
+            each.relative_to(ROOT),
+        )
