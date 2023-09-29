@@ -5,9 +5,10 @@
 Usage
 -----
 
-The extension currently provides a single Sphinx `role`:
+The extension currently provides a single Sphinx `domain` (named
+**jsonschema**). It provides:
 
-.. rst:role:: kw
+.. rst:role:: jsonschema:keyword
 
     Link to the current JSON Schema specification's definition of the keyword provided.
 
@@ -15,11 +16,11 @@ For instance, writing:
 
     .. code-block:: rst
 
-        Reference resolution in JSON Schema is done using the :kw:`$ref` keyword.
+        Reference resolution in JSON Schema is done using the :jsonschema:keyword:`$ref` keyword.
 
 will produce:
 
-    Reference resolution in JSON Schema is done using the :kw:`$ref` keyword.
+    Reference resolution in JSON Schema is done using the :jsonschema:keyword:`$ref` keyword.
 
 In addition, the extension automatically populates the Sphinx glossary with terms from the `JSON Schema Glossary <https://json-schema.org/learn/glossary.html>`_, such that:
 

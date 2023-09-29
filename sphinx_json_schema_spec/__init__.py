@@ -15,6 +15,7 @@ except ImportError:
 
 from docutils import nodes
 from lxml import html
+import sphinx.domains
 
 BASE_URL = "https://json-schema.org/draft/2020-12/"
 VOCABULARIES = {
@@ -28,6 +29,18 @@ HARDCODED = {
 }
 
 
+def create_domain(vocabularies):
+    class JSONSchema(sphinx.domains.Domain):
+
+        name = "jsonschema"
+        label = "JSON Schema"
+
+        roles = {
+            "keyword": docutils_does_not_allow_using_classes(vocabularies)
+        }
+    return JSONSchema
+
+
 def setup(app):
     """
     Install the plugin.
@@ -39,15 +52,14 @@ def setup(app):
             the Sphinx application context
     """
     app.add_config_value("cache_path", "_cache", "")
-
     CACHE = Path(app.config.cache_path)
     CACHE.mkdir(exist_ok=True)
-
     documents = {
         url: fetch_or_load(cache_path=CACHE / f"{name}.html", url=url)
         for name, url in VOCABULARIES.items()
     }
-    app.add_role("kw", docutils_does_not_allow_using_classes(documents))
+
+    app.add_domain(create_domain(documents))
 
     glossary = fetch_or_load(
         cache_path=CACHE / "glossary.html",
