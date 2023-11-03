@@ -60,7 +60,6 @@ multi_line_output = 3
 
 [tool.ruff]
 line-length = 79
-target-version = "py38"
 select = ["B", "D", "E", "F", "Q", "UP", "W"]
 ignore = [
   # raise SomeException(...) is fine.
