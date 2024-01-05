@@ -2,16 +2,12 @@
 Sphinx support for interlinking to the JSON Schema specifications.
 """
 from contextlib import suppress
-from datetime import datetime
+from datetime import UTC, datetime
+from importlib import metadata
 from pathlib import Path
 from urllib.parse import urljoin
 import ssl
 import urllib.request
-
-try:
-    from importlib import metadata
-except ImportError:
-    import importlib_metadata as metadata  # type: ignore
 
 from docutils import nodes
 from lxml import html
@@ -76,7 +72,7 @@ def fetch_or_load(cache_path, url):
     headers = {"User-Agent": f"sphinx-json-schema-spec v{version}"}
 
     with suppress(FileNotFoundError):
-        modified = datetime.utcfromtimestamp(cache_path.stat().st_mtime)
+        modified = datetime.fromtimestamp(cache_path.stat().st_mtime, UTC)
         date = modified.strftime("%a, %d %b %Y %I:%M:%S UTC")
         headers["If-Modified-Since"] = date
 
