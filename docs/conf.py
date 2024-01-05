@@ -37,7 +37,7 @@ def entire_domain(host):
 linkcheck_ignore = [
     entire_domain("img.shields.io"),
     "https://github.com/python-jsonschema/sphinx-json-schema-spec/actions",
-    "https://github.com/python-jsonschema/sphinx-json-schema-spec/workflows/CI/badge.svg",  # noqa: E501
+    "https://github.com/python-jsonschema/sphinx-json-schema-spec/workflows/CI/badge.svg",
 ]
 
 # = Extensions =

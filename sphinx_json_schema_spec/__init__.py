@@ -18,9 +18,9 @@ VOCABULARIES = {
     "validation": urljoin(BASE_URL, "json-schema-validation.html"),
 }
 HARDCODED = {
-    "$dynamicRef": "https://json-schema.org/draft/2020-12/json-schema-core.html#dynamic-ref",                        # noqa: E501
+    "$dynamicRef": "https://json-schema.org/draft/2020-12/json-schema-core.html#dynamic-ref",
     "$ref": "https://json-schema.org/draft/2020-12/json-schema-core.html#ref",
-    "format": "https://json-schema.org/draft/2020-12/json-schema-validation.html#name-implementation-requirements",  # noqa: E501
+    "format": "https://json-schema.org/draft/2020-12/json-schema-validation.html#name-implementation-requirements",
 }
 
 
@@ -80,7 +80,7 @@ def fetch_or_load(cache_path, url):
     context = ssl.create_default_context()
     response = urllib.request.urlopen(request, context=context)
 
-    if response.code == 200:
+    if response.code == 200:  # noqa: PLR2004
         with cache_path.open("w+b") as out:
             out.writelines(response)
             out.seek(0)
