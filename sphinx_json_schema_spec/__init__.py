@@ -33,6 +33,7 @@ def setup(app):
         app (sphinx.application.Sphinx):
 
             the Sphinx application context
+
     """
     app.add_config_value("cache_path", "_cache", "")
 
@@ -67,6 +68,7 @@ def fetch_or_load(cache_path, url):
         url:
 
             the URL of the document
+
     """
     version = metadata.version("sphinx-json-schema-spec")
     headers = {"User-Agent": f"sphinx-json-schema-spec v{version}"}
@@ -130,6 +132,7 @@ def docutils_does_not_allow_using_classes(vocabularies):
 
                 a 2-tuple of nodes to insert into the document and an
                 iterable of system messages, both possibly empty
+
         """
         hardcoded = HARDCODED.get(text)
         if hardcoded is not None:
