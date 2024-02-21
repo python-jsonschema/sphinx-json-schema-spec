@@ -13,8 +13,7 @@ readme = "README.rst"
 license = {text = "MIT"}
 keywords = ["json schema", "jsonschema", "data validation", "sphinx", "json"]
 authors = [
-  {email = "Julian+sphinx-json-schema-spec@GrayVines.com"},
-  {name = "Julian Berman"},
+  { name = "Julian Berman", email = "Julian+sphinx-json-schema-spec@GrayVines.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
