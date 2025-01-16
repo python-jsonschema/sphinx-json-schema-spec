@@ -10,7 +10,8 @@ name = "sphinx_json_schema_spec"
 description = "Sphinx support for the JSON Schema specifications"
 requires-python = ">=3.11"
 readme = "README.rst"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["COPYING"]
 keywords = ["json schema", "jsonschema", "data validation", "sphinx", "json"]
 authors = [
   { name = "Julian Berman", email = "Julian+sphinx-json-schema-spec@GrayVines.com" },
@@ -18,7 +19,6 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.11",
@@ -45,21 +45,12 @@ Source = "https://github.com/python-jsonschema/sphinx-json-schema-spec"
 
 [tool.doc8]
 ignore = [
-    "D000",  # see PyCQA/doc8#125
-    "D001",  # one sentence per line, so max length doesn't make sense
+  "D000",  # see PyCQA/doc8#125
+  "D001",  # one sentence per line, so max length doesn't make sense
 ]
-
-[tool.isort]
-combine_as_imports = true
-ensure_newline_before_comments = true
-from_first = true
-include_trailing_comma = true
-multi_line_output = 3
-use_parentheses = true
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ["suite"]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -67,6 +58,7 @@ ignore = [
   "A001",  # It's fine to shadow builtins
   "A002",
   "A003",
+  "A005",
   "ARG",  # This is all wrong whenever an interface is involved
   "ANN",  # Just let the type checker do this
   "B006",  # Mutable arguments require care but are OK if you don't abuse them
@@ -89,7 +81,6 @@ ignore = [
   "EM102",
   "FBT",  # It's worth avoiding boolean args but I don't care to enforce it
   "FIX",  # Yes thanks, if I could it wouldn't be there
-  "I001",  # We can't yet use ruff's isort
   "N",  # These naming rules are silly
   "PLR0912",  # These metrics are fine to be aware of but not to enforce
   "PLR0913",
