@@ -50,7 +50,8 @@ autosectionlabel_prefix_document = True
 
 intersphinx_mapping = {
     "jsonschema": (
-        "https://python-jsonschema.readthedocs.io/en/latest/", None,
+        "https://python-jsonschema.readthedocs.io/en/latest/",
+        None,
     ),
     "packaging": ("https://packaging.python.org/", None),
     "python": ("https://docs.python.org/", None),

@@ -1,6 +1,7 @@
 """
 Sphinx support for interlinking to the JSON Schema specifications.
 """
+
 from contextlib import suppress
 from datetime import UTC, datetime
 from importlib import metadata
@@ -186,4 +187,5 @@ def missing_reference(glossary):
 
         text = contnod.astext() if node["refexplicit"] else target
         return nodes.reference(text, text, internal=False, refuri=uri)
+
     return _missing_reference
