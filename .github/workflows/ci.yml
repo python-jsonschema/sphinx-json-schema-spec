@@ -18,7 +18,7 @@ jobs:
     outputs:
       noxenvs: ${{ steps.noxenvs-matrix.outputs.noxenvs }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -40,7 +40,7 @@ jobs:
         noxenv: ${{ fromJson(needs.list.outputs.noxenvs) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install dependencies
         run: >
           sudo apt-get update &&
@@ -78,7 +78,7 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
