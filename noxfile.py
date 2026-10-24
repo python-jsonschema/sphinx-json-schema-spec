@@ -71,7 +71,7 @@ def typing(session):
     """
     Check static typing.
     """
-    session.install("mypy", "types-docutils", "types-lxml", ROOT)
+    session.install("mypy", "pytest", "types-docutils", "types-lxml", ROOT)
     session.run("python", "-m", "mypy", PACKAGE)
 
 
