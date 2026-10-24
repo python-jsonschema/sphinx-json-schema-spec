@@ -4,6 +4,7 @@ Sphinx support for interlinking to the JSON Schema specifications.
 
 from contextlib import suppress
 from datetime import UTC, datetime
+from email.utils import format_datetime
 from importlib import metadata
 from pathlib import Path
 from urllib.parse import urljoin
@@ -76,7 +77,7 @@ def fetch_or_load(cache_path, url):
 
     with suppress(FileNotFoundError):
         modified = datetime.fromtimestamp(cache_path.stat().st_mtime, UTC)
-        date = modified.strftime("%a, %d %b %Y %I:%M:%S UTC")
+        date = format_datetime(modified, usegmt=True)
         headers["If-Modified-Since"] = date
 
     request = urllib.request.Request(url, headers=headers)
